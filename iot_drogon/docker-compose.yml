@@ -14,3 +14,13 @@ services:
     ports:
       - "3306:3306"
       #mariadb --host localhost --port 3306 --user root --password test
+  postgres:
+    image: postgres:13.3
+    environment:
+      POSTGRES_DB: "product-service-db"
+      POSTGRES_USER: "product-service"
+      POSTGRES_PASSWORD: "product-service"
+    volumes:
+      - .:/docker-entrypoint-initdb.d
+    ports:
+      - "5433:5432"
