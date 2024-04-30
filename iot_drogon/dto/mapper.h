@@ -37,7 +37,8 @@ namespace drogon {
     template<>
     inline GetProductsByTitleRequest fromRequest(const HttpRequest &req) {
         auto title = req.getParameter("title");
-        return GetProductsByTitleRequest{title};
+        auto getProductsRequest = GetProductsByTitleRequest{title};
+        return getProductsRequest;
     }
 
 }
