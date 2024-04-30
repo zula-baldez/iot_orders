@@ -15,7 +15,7 @@ public:
 
     static void findSale(int productId, std::function<void(const drogon::HttpResponsePtr &)> callback);
 
-    static void findSale(std::string title, std::function<void(const drogon::HttpResponsePtr &)> callback);
+    static void getProductsByTitle(std::string title, std::function<void(const drogon::HttpResponsePtr &)> callback);
 
     static void getProducts(std::function<void(const drogon::HttpResponsePtr &)> callback);
 

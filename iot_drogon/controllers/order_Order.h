@@ -21,8 +21,7 @@ namespace order {
             METHOD_ADD(Order::findSaleRequest, "/find-sale-request", Get, "JwtFilter");
             METHOD_ADD(Order::getProductsByType, "/get-products-by-type", Get, "JwtFilter");
             METHOD_ADD(Order::getProducts, "/get-products", Get, "JwtFilter");
-            METHOD_ADD(Order::getProductByTitle, "/get-products-by-title", Get, "JwtFilter");
-
+            METHOD_ADD(Order::getProductsByTitle, "/get-products-by-title", Get, "JwtFilter");
         METHOD_LIST_END
 
         auto findSaleRequest(const HttpRequestPtr &req,
@@ -37,10 +36,9 @@ namespace order {
                             std::function<void(const HttpResponsePtr &)> &&callback,
                             struct AddItemRequest &&) -> void;
 
-        auto getProductByTitle(const HttpRequestPtr &req,
+        auto getProductsByTitle(const HttpRequestPtr &req,
                             std::function<void(const HttpResponsePtr &)> &&callback,
-                            struct GetProductByTitleRequest &&) -> void;
-
+                            struct GetProductsByTitleRequest &&) -> void;
 
         auto getProductsByType(const HttpRequestPtr &req,
                             std::function<void(const HttpResponsePtr &)> &&callback,
