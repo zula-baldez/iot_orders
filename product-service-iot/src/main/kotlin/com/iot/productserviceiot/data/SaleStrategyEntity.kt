@@ -15,12 +15,12 @@ open class SaleStrategyEntity (
     open var productType: ProductType,
 
     @Column
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "border_list", joinColumns = [JoinColumn(name = "id")])
     open var borderList: List<Int>,
 
     @Column
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "sales_list", joinColumns = [JoinColumn(name = "id")])
     open var salesList: List<Int>
-) {}
+)
