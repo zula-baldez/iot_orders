@@ -18,6 +18,7 @@ class StMapper {
                     put(border, sales)
                 }
             }
+            println(borderSalesMap)
             return SalesStrategy(saleStrategyEntity.productType, borderSalesMap)
         }
     }
