@@ -11,7 +11,7 @@
 #include "AddItemRequest.h"
 #include "ProductType.h"
 #include "Product.h"
-
+#include "GetProductByTitleRequest.h"
 
 namespace drogon {
     template<>
@@ -33,6 +33,11 @@ namespace drogon {
         auto typeStr = (req.getParameter("productType"));
         auto productType = ProductMapper::map(typeStr);
         return productType;
+    }
+    template<>
+    inline GetProductByTitleRequest fromRequest(const HttpRequest &req) {
+        auto title = req.getParameter("title");
+        return GetProductByTitleRequest{title};
     }
 
 }
