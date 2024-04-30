@@ -8,7 +8,6 @@ class SalesStrategy(
     private val highestBorderToSaleSize: TreeMap<Int, Int>
 ) {
     fun getSale(expirationPoints: Int): Int {
-        println(expirationPoints)
         return highestBorderToSaleSize.ceilingEntry(expirationPoints)?.value ?: 0
     }
 }

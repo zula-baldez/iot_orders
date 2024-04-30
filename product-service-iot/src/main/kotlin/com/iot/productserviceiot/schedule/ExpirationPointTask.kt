@@ -22,15 +22,12 @@ class ExpirationPointsTask(
         val sort = Sort.unsorted()
         var selected = productRepository.findAll(SelectRequest(offset, limit, sort)).content
         while (selected.isNotEmpty()) {
-            selected.forEach { println(it.productType) }
-            selected.forEach { println(it.title) }
 
             selected.forEach { it.expirationPoints -= it.expirationPointsDecreaseSpeed; }
             selected.forEach {
                 val sample = sampleRepository.findAllByTitle(it.title).first()
                 val initialPrice = sample.initialPrice
                 val sale = salesService.getSale(it.id!!)
-                println(sale)
                 it.currentPrice  =  initialPrice - (sale * 1.0) / 100 * initialPrice
             }
             productRepository.saveAllAndFlush(
