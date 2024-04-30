@@ -9,7 +9,9 @@
 #include <../dto/Product.h>
 #include <../dto/ProductType.h>
 #include <coroutine>
+#include <string>
 class ProductClient {
+
 public:
     static void getProductsByType(ProductType type, std::function<void(const drogon::HttpResponsePtr &)> callback);
 
