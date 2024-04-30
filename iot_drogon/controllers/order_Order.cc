@@ -44,7 +44,7 @@ auto Order::getProductsByType(const HttpRequestPtr &req, std::function<void(cons
     });
 }
 
-auto Order::getProductByTitle(const HttpRequestPtr &req,
+auto Order::getProductsByTitle(const HttpRequestPtr &req,
                     std::function<void(const HttpResponsePtr &)> &&callback,
                     struct GetProductsByTitleRequest && request) -> void {
     ProductClient::getProductsByTitle(request.title, [callback](const drogon::HttpResponsePtr &response)  {
