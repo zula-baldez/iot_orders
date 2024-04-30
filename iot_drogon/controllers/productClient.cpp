@@ -41,7 +41,7 @@ void ProductClient::getProducts(std::function<void(const drogon::HttpResponsePtr
     });
 }
 
-void getProductsByTitle(std::string title, std::function<void(const drogon::HttpResponsePtr &)> callback) {
+void ProductClient::getProductsByTitle(std::string title, std::function<void(const drogon::HttpResponsePtr &)> callback) {
     drogon::HttpClientPtr client = drogon::HttpClient::newHttpClient("http://127.0.0.1:8081/");
     auto req = drogon::HttpRequest::newHttpRequest();
     req->setPath("/products/title");
