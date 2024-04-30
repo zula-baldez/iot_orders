@@ -64,7 +64,7 @@ class ProductInfoController(
         return ResponseEntity.ok(productsByType)
     }
 
-    @GetMapping("product/title")
+    @GetMapping("products/title")
     fun getProductByType(@RequestParam title: String): ResponseEntity<List<Product>> {
         val productsByType = productRepository.findAllByTitle(title).map { ProductMapper.MAPPER.map(it) }
             .sortedBy { it.expirationPoints }
