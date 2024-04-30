@@ -27,7 +27,7 @@ class ExpirationPointsTask(
                 val sample = sampleRepository.findAllByTitle(it.title).first()
                 val initialPrice = sample.initialPrice
                 val sale = salesService.getSale(sample.id!!)
-                it.currentPrice  = (sale * 1.0) / 100 * initialPrice
+                it.currentPrice  =  initialPrice - (sale * 1.0) / 100 * initialPrice
             }
             productRepository.saveAll(
                 selected
