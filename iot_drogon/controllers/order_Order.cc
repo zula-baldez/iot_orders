@@ -30,7 +30,7 @@ auto Order::addItemRequest(const HttpRequestPtr &req, std::function<void(const H
         auto price = ProductClient::getCurrentPrice(addItemRequest.itemId);
         json["price"] = price;
         json["is_approved"] = true;
-        json["order_id"] = orderList.getId().get();
+        json["order_id"] = *orderList.getId();
         auto orderItem = drogon_model::test::OrderItem(json);
         orderItemMapper.insert(orderItem);
         json = Json::Value();
@@ -51,16 +51,28 @@ auto Order::addItemRequest(const HttpRequestPtr &req, std::function<void(const H
 
 auto Order::getProductsByType(const HttpRequestPtr &req, std::function<void(const HttpResponsePtr &)> &&callback,
                               ProductType &&type) -> void {
-    ProductClient::getProductsByType(type, [callback](const drogon::HttpResponsePtr &response) {
-        callback(response);
+    ProductClient::getProductsByType(type, [callback, this](const drogon::HttpResponsePtr &response) {
+        auto products = DtoMapper::fromResponse(*response);
+        products = filter(products);
+        this->filter(products);
+        auto json = DtoMapper::toResponse(products);
+        auto resp = HttpResponse::newHttpJsonResponse(json);
+        resp->setStatusCode(HttpStatusCode::k200OK);
+        callback(resp);
     });
 }
 
 auto Order::getProductsByTitle(const HttpRequestPtr &req,
                                std::function<void(const HttpResponsePtr &)> &&callback,
                                struct GetProductsByTitleRequest &&request) -> void {
-    ProductClient::getProductsByTitle(request.title, [callback](const drogon::HttpResponsePtr &response) {
-        callback(response);
+    ProductClient::getProductsByTitle(request.title, [callback, this](const drogon::HttpResponsePtr &response) {
+        auto products = DtoMapper::fromResponse(*response);
+        products = filter(products);
+        this->filter(products);
+        auto json = DtoMapper::toResponse(products);
+        auto resp = HttpResponse::newHttpJsonResponse(json);
+        resp->setStatusCode(HttpStatusCode::k200OK);
+        callback(resp);
     });
 }
 
@@ -72,8 +84,29 @@ auto Order::buyRequest(const HttpRequestPtr &req, std::function<void(const HttpR
 }
 
 auto Order::getProducts(const HttpRequestPtr &req, std::function<void(const HttpResponsePtr &)> &&callback) -> void {
-    ProductClient::getProducts([callback](const drogon::HttpResponsePtr &response) {
-        callback(response);
+    ProductClient::getProducts([callback, this](const drogon::HttpResponsePtr &response) {
+        auto products = DtoMapper::fromResponse(*response);
+        products = filter(products);
+        this->filter(products);
+        auto json = DtoMapper::toResponse(products);
+        auto resp = HttpResponse::newHttpJsonResponse(json);
+        resp->setStatusCode(HttpStatusCode::k200OK);
+        callback(resp);
     });
+}
+
+std::vector<Product> Order::filter(const std::vector<Product> &products) {
+    auto db = orderItemMapper.findAll();
+    std::unordered_set<long> s;
+    for (const auto &product: db) {
+        s.insert(*product.getId());
+    }
+    std::vector<Product> nProducts{};
+    for (const auto &product: products) {
+        if (!s.contains(product.id)) {
+            nProducts.push_back(product);
+        }
+    }
+    return nProducts;
 }
 

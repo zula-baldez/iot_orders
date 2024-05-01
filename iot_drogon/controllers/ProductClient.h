@@ -23,7 +23,7 @@ public:
 
     static int getCurrentPrice(long productId);
 
-    static int deleteProductDto();
+    //static int deleteProducts(std::vector<long> productIds);
 
 
 

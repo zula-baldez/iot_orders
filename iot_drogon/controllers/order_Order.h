@@ -56,7 +56,7 @@ namespace order {
         drogon::orm::Mapper<drogon_model::test::OrderItem> orderItemMapper = drogon::orm::Mapper<drogon_model::test::OrderItem>(
                 app().getDbClient()
         );
-        void addItem(long uid, AddItemRequest addItemRequest);
+        std::vector<Product> filter(const std::vector<Product>& products);
     };
 };
 

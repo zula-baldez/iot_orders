@@ -68,19 +68,17 @@ int ProductClient::getCurrentPrice(long productId) {
     });
     return valid.get_future().get();
 }
-//
-//void ProductClient::getCurrentPrice(long productId) {
+//void ProductClient::deleteProducts(std::vector<long> ids) {
 //    drogon::HttpClientPtr client = drogon::HttpClient::newHttpClient("http://127.0.0.1:8081/");
 //    auto req = drogon::HttpRequest::newHttpRequest();
-//    req->setPath("/products/info");
-//    req->setParameter("productId", std::to_string(productId));
-//    req->setMethod(drogon::Get);
+//    req->setPath("product/delete");
+//    req->setMethod(drogon::Delete);
 //    std::promise<int> valid;
 //    client->sendRequest(req, [&](drogon::ReqResult result, const drogon::HttpResponsePtr &response) {
 //        const auto &json = (*response).getJsonObject();
 //        auto price = (*json)["currentPrice"].asDouble();
 //        valid.set_value((int)price);
-//
 //    });
-//    return valid.get_future().get();
+//    valid.get_future().get();
+//    return;
 //}
