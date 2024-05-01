@@ -110,13 +110,7 @@ auto Order::buyRequest(const HttpRequestPtr &req, std::function<void(const HttpR
 
 auto Order::getProducts(const HttpRequestPtr &req, std::function<void(const HttpResponsePtr &)> &&callback) -> void {
     ProductClient::getProducts([callback, this](const drogon::HttpResponsePtr &response) {
-        auto products = DtoMapper::fromResponse(*response);
-        products = filter(products);
-        this->filter(products);
-        auto json = DtoMapper::toResponse(products);
-        auto resp = HttpResponse::newHttpJsonResponse(json);
-        resp->setStatusCode(HttpStatusCode::k200OK);
-        callback(resp);
+        callback(response);
     });
 }
 
