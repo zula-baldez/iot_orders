@@ -189,8 +189,11 @@ class OrderItem
         std::string sql="insert into " + tableName + " (";
         size_t parametersCount = 0;
         needSelection = false;
+        if(dirtyFlag_[0])
+        {
             sql += "id,";
             ++parametersCount;
+        }
         if(dirtyFlag_[1])
         {
             sql += "price,";
@@ -206,7 +209,6 @@ class OrderItem
             sql += "is_approved,";
             ++parametersCount;
         }
-        needSelection=true;
         if(parametersCount > 0)
         {
             sql[sql.length()-1]=')';
@@ -215,7 +217,11 @@ class OrderItem
         else
             sql += ") values (";
 
-        sql +="default,";
+        if(dirtyFlag_[0])
+        {
+            sql.append("?,");
+
+        }
         if(dirtyFlag_[1])
         {
             sql.append("?,");

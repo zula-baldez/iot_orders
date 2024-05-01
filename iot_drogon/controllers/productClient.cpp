@@ -68,17 +68,20 @@ int ProductClient::getCurrentPrice(long productId) {
     });
     return valid.get_future().get();
 }
-//void ProductClient::deleteProducts(std::vector<long> ids) {
-//    drogon::HttpClientPtr client = drogon::HttpClient::newHttpClient("http://127.0.0.1:8081/");
-//    auto req = drogon::HttpRequest::newHttpRequest();
-//    req->setPath("product/delete");
-//    req->setMethod(drogon::Delete);
-//    std::promise<int> valid;
-//    client->sendRequest(req, [&](drogon::ReqResult result, const drogon::HttpResponsePtr &response) {
-//        const auto &json = (*response).getJsonObject();
-//        auto price = (*json)["currentPrice"].asDouble();
-//        valid.set_value((int)price);
-//    });
-//    valid.get_future().get();
-//    return;
-//}
+
+void ProductClient::deleteProducts(const std::vector<long>& productIds) {
+    drogon::HttpClientPtr client = drogon::HttpClient::newHttpClient("http://127.0.0.1:8081/");
+    auto req = drogon::HttpRequest::newHttpRequest();
+    req->setPath("/product/delete");
+    req->setContentTypeCode(drogon::ContentType::CT_APPLICATION_JSON);
+    req->setMethod(drogon::Delete);
+    auto jsonP = Json::Value();
+    for(auto id : productIds) {
+        jsonP.append(id);
+    }
+    auto json = Json::Value();
+    json["productIds"] = jsonP;
+    req->setBody(json.toStyledString());
+    auto test = json.toStyledString();
+    client->sendRequest(req, [&](drogon::ReqResult result, const drogon::HttpResponsePtr &response) {});
+}

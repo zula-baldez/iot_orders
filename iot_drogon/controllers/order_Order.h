@@ -22,7 +22,7 @@ namespace order {
             METHOD_ADD(Order::getProductsByType, "/get-products-by-type", Get, "JwtFilter");
             METHOD_ADD(Order::getProducts, "/get-products", Get, "JwtFilter");
             METHOD_ADD(Order::getProductsByTitle, "/get-products-by-title", Get, "JwtFilter");
-            METHOD_ADD(Order::buyRequest, "/submit-order", Get, "JwtFilter");
+            METHOD_ADD(Order::buyRequest, "/submit-order", Post, "JwtFilter");
         METHOD_LIST_END
 
         auto findSaleRequest(const HttpRequestPtr &req,

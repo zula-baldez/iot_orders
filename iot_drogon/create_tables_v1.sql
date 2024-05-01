@@ -6,7 +6,7 @@ CREATE TABLE IF NOT EXISTS order_list
 
 CREATE TABLE IF NOT EXISTS order_item
 (
-    id          INT AUTO_INCREMENT PRIMARY KEY,
+    id          INT PRIMARY KEY,
     price       DOUBLE,
     order_id    INT,
     is_approved BOOLEAN, #TODO PRODUCT ID

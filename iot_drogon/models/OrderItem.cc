@@ -22,7 +22,7 @@ const bool OrderItem::hasPrimaryKey = true;
 const std::string OrderItem::tableName = "order_item";
 
 const std::vector<typename OrderItem::MetaData> OrderItem::metaData_={
-{"id","int32_t","int(11)",4,1,1,1},
+{"id","int32_t","int(11)",4,0,1,1},
 {"price","double","double",8,0,0,0},
 {"order_id","int32_t","int(11)",4,0,0,0},
 {"is_approved","int8_t","tinyint(1)",1,0,0,0}
@@ -329,12 +329,12 @@ void OrderItem::setIsApprovedToNull() noexcept
 
 void OrderItem::updateId(const uint64_t id)
 {
-    id_ = std::make_shared<int32_t>(static_cast<int32_t>(id));
 }
 
 const std::vector<std::string> &OrderItem::insertColumns() noexcept
 {
     static const std::vector<std::string> inCols={
+        "id",
         "price",
         "order_id",
         "is_approved"
@@ -344,6 +344,17 @@ const std::vector<std::string> &OrderItem::insertColumns() noexcept
 
 void OrderItem::outputArgs(drogon::orm::internal::SqlBinder &binder) const
 {
+    if(dirtyFlag_[0])
+    {
+        if(getId())
+        {
+            binder << getValueOfId();
+        }
+        else
+        {
+            binder << nullptr;
+        }
+    }
     if(dirtyFlag_[1])
     {
         if(getPrice())
@@ -382,6 +393,10 @@ void OrderItem::outputArgs(drogon::orm::internal::SqlBinder &binder) const
 const std::vector<std::string> OrderItem::updateColumns() const
 {
     std::vector<std::string> ret;
+    if(dirtyFlag_[0])
+    {
+        ret.push_back(getColumnName(0));
+    }
     if(dirtyFlag_[1])
     {
         ret.push_back(getColumnName(1));
@@ -399,6 +414,17 @@ const std::vector<std::string> OrderItem::updateColumns() const
 
 void OrderItem::updateArgs(drogon::orm::internal::SqlBinder &binder) const
 {
+    if(dirtyFlag_[0])
+    {
+        if(getId())
+        {
+            binder << getValueOfId();
+        }
+        else
+        {
+            binder << nullptr;
+        }
+    }
     if(dirtyFlag_[1])
     {
         if(getPrice())
@@ -566,6 +592,11 @@ bool OrderItem::validateJsonForCreation(const Json::Value &pJson, std::string &e
         if(!validJsonOfField(0, "id", pJson["id"], err, true))
             return false;
     }
+    else
+    {
+        err="The id column cannot be null";
+        return false;
+    }
     if(pJson.isMember("price"))
     {
         if(!validJsonOfField(1, "price", pJson["price"], err, true))
@@ -600,6 +631,11 @@ bool OrderItem::validateMasqueradedJsonForCreation(const Json::Value &pJson,
               if(!validJsonOfField(0, pMasqueradingVector[0], pJson[pMasqueradingVector[0]], err, true))
                   return false;
           }
+        else
+        {
+            err="The " + pMasqueradingVector[0] + " column cannot be null";
+            return false;
+        }
       }
       if(!pMasqueradingVector[1].empty())
       {
@@ -717,11 +753,6 @@ bool OrderItem::validJsonOfField(size_t index,
             if(pJson.isNull())
             {
                 err="The " + fieldName + " column cannot be null";
-                return false;
-            }
-            if(isForCreation)
-            {
-                err="The automatic primary key cannot be set";
                 return false;
             }
             if(!pJson.isInt())

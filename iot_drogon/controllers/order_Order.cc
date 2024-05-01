@@ -25,12 +25,13 @@ auto Order::addItemRequest(const HttpRequestPtr &req, std::function<void(const H
 
     auto presentOrder = orderItemMapper.findBy(
             drogon::orm::Criteria("id", drogon::orm::CompareOperator::EQ, addItemRequest.itemId));
-    if (presentOrder.size() == 0) {
+    if (presentOrder.empty()) {
         auto json = Json::Value();
         auto price = ProductClient::getCurrentPrice(addItemRequest.itemId);
         json["price"] = price;
         json["is_approved"] = true;
         json["order_id"] = *orderList.getId();
+        json["id"] = addItemRequest.itemId;
         auto orderItem = drogon_model::test::OrderItem(json);
         orderItemMapper.insert(orderItem);
         json = Json::Value();
@@ -78,10 +79,34 @@ auto Order::getProductsByTitle(const HttpRequestPtr &req,
 
 
 auto Order::buyRequest(const HttpRequestPtr &req, std::function<void(const HttpResponsePtr &)> &&callback) -> void {
-//    auto uid = util::JwtService::getCurrentUserIdFromRequest(req).value();
-//    auto orderListId = orderListMapper.findOne(drogon::orm::Criteria("uid", drogon::orm::CompareOperator::EQ, uid)).getId().get();
-//    auto orderItemIds
+    auto uid = util::JwtService::getCurrentUserIdFromRequest(req).value();
+    drogon_model::test::OrderList orderList;
+    try {
+        orderList = orderListMapper.findOne(drogon::orm::Criteria("uid", drogon::orm::CompareOperator::EQ, uid));
+    } catch (drogon::orm::UnexpectedRows &e) {
+        auto json = Json::Value();
+        auto resp = HttpResponse::newHttpJsonResponse(json);
+        resp->setStatusCode(HttpStatusCode::k400BadRequest);
+        resp->setBody("order not found");
+        callback(resp);
+    }
+
+    auto orders = orderItemMapper.findBy(
+            drogon::orm::Criteria("order_id", drogon::orm::CompareOperator::EQ, *orderList.getId()));
+    std::vector<long> ids;
+    for (const auto &order: orders) {
+        ids.push_back(*order.getId());
+    }
+    ProductClient::deleteProducts(ids);
+    orderItemMapper.deleteBy(
+            drogon::orm::Criteria("order_id", drogon::orm::CompareOperator::EQ, *orderList.getId()));
+    orderListMapper.deleteBy(drogon::orm::Criteria("uid", drogon::orm::CompareOperator::EQ, uid));
+    auto json = Json::Value();
+    auto resp = HttpResponse::newHttpJsonResponse(json);
+    resp->setStatusCode(HttpStatusCode::k200OK);
+    callback(resp);
 }
+
 
 auto Order::getProducts(const HttpRequestPtr &req, std::function<void(const HttpResponsePtr &)> &&callback) -> void {
     ProductClient::getProducts([callback, this](const drogon::HttpResponsePtr &response) {
