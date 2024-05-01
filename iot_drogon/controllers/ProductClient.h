@@ -23,6 +23,9 @@ public:
 
     static int getCurrentPrice(long productId);
 
+    static int deleteProductDto();
+
+
 
 private:
     //const drogon::HttpClientPtr client;

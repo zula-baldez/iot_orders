@@ -22,6 +22,7 @@ namespace order {
             METHOD_ADD(Order::getProductsByType, "/get-products-by-type", Get, "JwtFilter");
             METHOD_ADD(Order::getProducts, "/get-products", Get, "JwtFilter");
             METHOD_ADD(Order::getProductsByTitle, "/get-products-by-title", Get, "JwtFilter");
+            METHOD_ADD(Order::buyRequest, "/submit-order", Get, "JwtFilter");
         METHOD_LIST_END
 
         auto findSaleRequest(const HttpRequestPtr &req,
@@ -33,8 +34,7 @@ namespace order {
                             struct AddItemRequest &&) -> void;
 
         auto buyRequest(const HttpRequestPtr &req,
-                            std::function<void(const HttpResponsePtr &)> &&callback,
-                            struct AddItemRequest &&) -> void;
+                            std::function<void(const HttpResponsePtr &)> &&callback) -> void;
 
         auto getProductsByTitle(const HttpRequestPtr &req,
                             std::function<void(const HttpResponsePtr &)> &&callback,
@@ -56,6 +56,7 @@ namespace order {
         drogon::orm::Mapper<drogon_model::test::OrderItem> orderItemMapper = drogon::orm::Mapper<drogon_model::test::OrderItem>(
                 app().getDbClient()
         );
+        void addItem(long uid, AddItemRequest addItemRequest);
     };
 };
 
