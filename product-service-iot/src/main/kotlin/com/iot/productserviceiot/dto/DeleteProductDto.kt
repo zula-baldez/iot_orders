@@ -1,3 +1,5 @@
 package com.iot.productserviceiot.dto
 
-data class DeleteProductDto(val productIds: List<Long>);
+import com.fasterxml.jackson.annotation.JsonProperty
+
+data class DeleteProductDto(@JsonProperty("productIds") var productIds: List<Long>);

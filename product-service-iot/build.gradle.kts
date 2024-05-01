@@ -19,7 +19,7 @@ java {
 repositories {
     mavenCentral()
 }
-val coroutinesVersion = "1.3.2"
+val coroutinesVersion = "1.8.0"
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
@@ -27,10 +27,19 @@ dependencies {
     implementation("org.springframework:spring-web:6.1.5")
     implementation("org.mapstruct:mapstruct:1.6.0.Beta1")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion")
+    implementation("org.reactivestreams:reactive-streams:1.0.4")
+     implementation("io.projectreactor:reactor-core:3.6.5")
+
     kapt("org.mapstruct:mapstruct-processor:1.6.0.Beta1")
     implementation("org.awaitility:awaitility:4.2.0")
     runtimeOnly("org.postgresql:postgresql")
-    implementation("org.springframework.boot:spring-boot-starter-web")
+// https://mvnrepository.com/artifact/org.jetbrains.kotlinx/kotlinx-coroutines-reactive
+    runtimeOnly("org.jetbrains.kotlinx:kotlinx-coroutines-reactive:1.8.0")
+// https://mvnrepository.com/artifact/org.jetbrains.kotlinx/kotlinx-coroutines-reactor
+    runtimeOnly("org.jetbrains.kotlinx:kotlinx-coroutines-reactor:1.8.0")
+
+// https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-webflux
+    implementation("org.springframework.boot:spring-boot-starter-webflux:3.2.4")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
 
