@@ -12,12 +12,12 @@ auto util::JwtService::getUserIdFromJwt(const std::string &token) -> std::option
         LOG_ERROR << e.what();
         return std::nullopt;
     }
-    return std::stol(decoded.get_payload_claim("uid").as_string());
+    return decoded.get_payload_claim("uid").as_integer();
 }
 
 auto util::JwtService::getCurrentUserIdFromRequest(const drogon::HttpRequestPtr &req) -> std::optional<long> {
-    if(req->getHeader("Authorization").size() >= 6) {
-        auto token = req->getHeader("Authorization").substr(6);
+    if(req->getHeader("Authorization").size() >= 7) {
+        auto token = req->getHeader("Authorization").substr(7   );
         return getUserIdFromJwt(token);
     } else {
         return std::nullopt;
